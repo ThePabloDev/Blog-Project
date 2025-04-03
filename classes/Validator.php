@@ -1,5 +1,51 @@
 <?php
 class Validator {
+
+    public static function validateRegisterData($data) {
+        $errors = [];
+
+        if (empty($data['name'])) {
+            $errors['name'] = 'O nome é obrigatório.';
+        } elseif (strlen($data['name']) > 100) {
+            $errors['name'] = 'O nome não pode ter mais de 100 caracteres.';
+        }
+
+        if (empty($data['email'])) {
+            $errors['email'] = 'O email é obrigatório.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'O email não é válido.';
+        } elseif (strlen($data['email']) > 100) {
+            $errors['email'] = 'O email não pode ter mais de 100 caracteres.';
+        }
+
+        if (empty($data['password'])) {
+            $errors['password'] = 'A senha é obrigatória.';
+        } elseif (strlen($data['password']) < 6) {
+            $errors['password'] = 'A senha deve ter pelo menos 6 caracteres.';
+        }
+
+        if ($data['password'] !== $data['confirm_password']) {
+            $errors['confirm_password'] = 'As senhas não coincidem.';
+        }
+
+        return $errors;
+    }
+
+
+    public static function validateLoginData($data) {
+        $errors = [];
+
+        if (empty($data['email'])) {
+            $errors['email'] = 'O email é obrigatório.';
+        }
+
+        if (empty($data['password'])) {
+            $errors['password'] = 'A senha é obrigatória.';
+        }
+
+        return $errors;
+    }
+
     public static function validatePostData($data, $files = null) {
         $errors = [];
 

@@ -23,13 +23,14 @@ class Post {
     public function getCreatedAt() { return $this->created_at; }
 
     public function save() {
-        $query = "INSERT INTO posts (title, content, image_path) VALUES (:title, :content, :image_path)";
+        $query = "INSERT INTO posts (title, content, image_path, user_id) VALUES (:title, :content, :image_path, :user_id)";
         $stmt = $this->db->prepare($query);
-
+    
         $stmt->bindParam(':title', $this->title);
         $stmt->bindParam(':content', $this->content);
         $stmt->bindParam(':image_path', $this->image_path);
-
+        $stmt->bindParam(':user_id', $_SESSION['user_id']);
+    
         return $stmt->execute();
     }
 

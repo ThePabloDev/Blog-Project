@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/classes/Database.php';
-require_once __DIR__ . '/classes/Post.php';
+require_once 'init.php';
+
+if (!$auth->isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+}
 
 error_log("Iniciando delete_post.php");
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     $_SESSION['error_message'] = "ID inválido ou não fornecido.";

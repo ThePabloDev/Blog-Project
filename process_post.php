@@ -1,10 +1,9 @@
 <?php
-require_once 'classes/Database.php';
-require_once 'classes/Post.php';
-require_once 'classes/Validator.php';
+require_once 'init.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if (!$auth->isLoggedIn()) {
+    header('Location: login.php');
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($post->save()) {
-            header('Location: index.php?success=1');
+            $_SESSION['success_message'] = 'Postagem criada com sucesso!';
+            header('Location: index.php');
             exit;
         } else {
             $_SESSION['errors'] = ['Ocorreu um erro ao salvar a postagem.'];
