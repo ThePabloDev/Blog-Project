@@ -34,6 +34,30 @@ class Post {
         return $stmt->execute();
     }
 
+
+public function update($id, $title, $content, $image_path = null) {
+    try {
+        $query = "UPDATE posts SET 
+                 title = :title, 
+                 content = :content, 
+                 image_path = COALESCE(:image_path, image_path),
+                 updated_at = CURRENT_TIMESTAMP
+                 WHERE id = :id AND user_id = :user_id";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':content', $content);
+        $stmt->bindParam(':image_path', $image_path);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Erro ao atualizar post: " . $e->getMessage());
+        return false;
+    }
+}
+
     public function getAll() {
         $query = "SELECT * FROM posts ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
@@ -51,17 +75,6 @@ class Post {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function update() {
-        $query = "UPDATE posts SET title = :title, content = :content, image_path = :image_path WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-
-        $stmt->bindParam(':title', $this->title);
-        $stmt->bindParam(':content', $this->content);
-        $stmt->bindParam(':image_path', $this->image_path);
-        $stmt->bindParam(':id', $this->id);
-
-        return $stmt->execute();
-    }
 
     public function delete($id) {
         error_log("Método delete() chamado para ID: $id");

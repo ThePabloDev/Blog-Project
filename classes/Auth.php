@@ -9,12 +9,10 @@ class Auth {
     }
 
     public function register($name, $email, $password) {
-        // Validação básica
         if (empty($name) || empty($email) || empty($password)) {
             return false;
         }
 
-        // Verifica se email já existe
         $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         
@@ -22,10 +20,8 @@ class Auth {
             return false;
         }
 
-        // Cria hash da senha
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Insere no banco
         $stmt = $this->db->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
         return $stmt->execute([$name, $email, $hashedPassword]);
     }
